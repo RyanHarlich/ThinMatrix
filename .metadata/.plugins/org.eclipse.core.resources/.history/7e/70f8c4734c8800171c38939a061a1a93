@@ -100,11 +100,11 @@ public class MainGameLoop {
 			}
 		}
 		
-		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
-				-10), 0, 0, 0, 5f));
+		entities.add(new Entity(boxModel, new Vector3f(100, 1, 
+				-10), 0, 0, 0, 1f));
 		
-		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
-				-100), 0, 0, 0, 5f));
+		entities.add(new Entity(boxModel, new Vector3f(100, 0, 
+				-100), 0, 0, 0, 1f));
 		
 		
 		

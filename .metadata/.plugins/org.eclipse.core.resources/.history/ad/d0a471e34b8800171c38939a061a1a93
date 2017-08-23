@@ -56,6 +56,7 @@ public class MainGameLoop {
 		playerTexture.setShineDamper(10);
 		playerTexture.setReflectivity(1);
 		
+		
 		/* Tree */
 		TexturedModel treeModel = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
 		
@@ -76,8 +77,6 @@ public class MainGameLoop {
 		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
 		fernModel.getTexture().setHasTransparency(true);
 		
-		/* Box */
-		TexturedModel boxModel = new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")));
 
 
 		/* Create entities */
@@ -100,11 +99,9 @@ public class MainGameLoop {
 			}
 		}
 		
-		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
-				-10), 0, 0, 0, 5f));
 		
-		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
-				-100), 0, 0, 0, 5f));
+		
+		
 		
 		
 		
