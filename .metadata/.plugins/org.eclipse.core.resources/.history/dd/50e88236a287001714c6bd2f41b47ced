@@ -1,0 +1,195 @@
+package engineTester;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
+
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import models.TexturedModel;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import renderEngine.OBJLoader;
+import terrains.Terrain;
+import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
+
+public class MainGameLoop {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		// OpenGL expects vertices to be defined counter clockwise by default
+
+
+		
+		
+		
+		
+		DisplayManager.createDisplay();	
+		Loader loader = new Loader();
+		
+		
+		//********** TERRAIN TEXTURE STUFF *******************
+		
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexute blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		
+		//****************************************************
+				
+				
+		
+		/* Tree */
+		TexturedModel treeModel = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
+		
+		/* Low Poly Tree */
+		TexturedModel lowPolyTreeModel = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree", loader), new ModelTexture(loader.loadTexture("lowPolyTree")));
+		
+		/* Grass */
+		TexturedModel grassModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
+		grassModel.getTexture().setHasTransparency(true);
+		grassModel.getTexture().setUseFakeLighting(true);
+		
+		/* Flower */
+		TexturedModel flowerModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("flowerTexture")));
+		flowerModel.getTexture().setHasTransparency(true);
+		flowerModel.getTexture().setUseFakeLighting(true);
+		
+		/* Fern */
+		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
+		fernModel.getTexture().setHasTransparency(true);
+		
+	
+		
+		
+		/* Light */
+		Light light = new Light(new Vector3f(20000,40000,20000), new Vector3f(1,1,1)); // light source // light color
+		
+		/* Terrain */
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(-1,-1, loader, texturePack, blendMap);
+		
+		
+		/* Camera */
+		Camera camera = new Camera();
+		
+		
+		
+
+
+		Random random = new Random();
+		
+		
+		/* Add all trees to list */
+		List<Entity> allTrees = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0; //random.nextFloat() * 100 - 50;
+			float z = random.nextFloat() * -300;
+			allTrees.add(new Entity(treeModel, new Vector3f(x,y,z), 0 /* random.nextFloat() * 180f */, 0  /* random.nextFloat() * 180f */, 0f, 1f));
+		}	
+		for (Entity tree : allTrees) {
+			ModelTexture texture = tree.getModel().getTexture();
+			texture.setShineDamper(76);
+			texture.setReflectivity(1);
+		}
+		
+		
+		
+		/* Add all low poly tree to list */
+		List<Entity> allLowPolyTree = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0;
+			float z = random.nextFloat() * -300;
+			allLowPolyTree.add(new Entity(lowPolyTreeModel, new Vector3f(x,y,z), 0, 0, 0f, 0.25f));
+		}
+		
+		
+		
+		/* Add all grass to list */
+		List<Entity> allGrass = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0;
+			float z = random.nextFloat() * -300;
+			allGrass.add(new Entity(grassModel, new Vector3f(x,y,z), 0, 0, 0f, 0.5f));
+		}
+		
+		
+		
+		/* Add all flowers to list */
+		List<Entity> allFlowers = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0;
+			float z = random.nextFloat() * -300;
+			allFlowers.add(new Entity(flowerModel, new Vector3f(x,y,z), 0, 0, 0f, 0.5f));
+		}
+		
+		
+		
+		/* Add all ferns to list */
+		List<Entity> allFerns = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0;
+			float z = random.nextFloat() * -300;
+			allFerns.add(new Entity(fernModel, new Vector3f(x,y,z), 0, 0, 0f, 0.25f));
+		}
+		
+		
+		
+		MasterRenderer renderer = new MasterRenderer();
+		
+		while(!Display.isCloseRequested()) {
+			camera.move();
+			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			
+			for (Entity tree : allTrees) {
+				tree.increaseRotation(0, 1, 0);
+				renderer.processEntity(tree);
+			}
+			
+			for (Entity tree : allLowPolyTree) {
+				renderer.processEntity(tree);
+			}
+
+			for (Entity grass : allGrass) {
+				renderer.processEntity(grass);
+			}
+			
+			for (Entity flower : allFlowers) {
+				renderer.processEntity(flower);
+			}
+			
+			for (Entity fern : allFerns) {
+				renderer.processEntity(fern);
+			}
+
+			
+
+			
+			renderer.render(light, camera);
+			DisplayManager.updateDisplay();
+		}
+		
+		renderer.cleanUp();
+		loader.cleanUp();
+		DisplayManager.closeDisplay();
+	}
+
+}

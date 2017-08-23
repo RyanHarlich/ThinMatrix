@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;allCubes&apos; in &apos;engineTester.MainGameLoop.main(...)&apos; to &apos;allTrees&apos;&#x0D;&#x0A;- Original project: &apos;GameEngine&apos;&#x0D;&#x0A;- Original element: &apos;engineTester.MainGameLoop.main(String[]).allCubes&apos;&#x0D;&#x0A;- Renamed element: &apos;allCubes&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;allCubes&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;engineTester{MainGameLoop.java[MainGameLoop~main~\[QString;@allCubes!2148!2195!2161!2168!QList\&lt;QEntity;&gt;;!0!false" name="allTrees" references="true" stamp="1503429741424" version="1.0"/>
+</session>

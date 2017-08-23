@@ -1,0 +1,176 @@
+package engineTester;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
+
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import models.RawModel;
+import models.TexturedModel;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import renderEngine.OBJLoader;
+import renderEngine.EntityRenderer;
+import shaders.StaticShader;
+import terrains.Terrain;
+import textures.ModelTexture;
+
+public class MainGameLoop {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		// OpenGL expects vertices to be defined counter clockwise by default
+		//float[] vertices = {
+		//		-0.5f, 0.5f, 0.0f, 	//VO
+		//		-0.5f, -0.5f, 0.0f, //V1
+		//		0.5f, -0.5f, 0.0f,	//V2
+		//		0.5f, 0.5f, 0.0f,	//V3
+		//};
+		//
+		//int[] indices = {
+		//		0,1,3, 	//Top left triangle (V0, V1, V3)
+		//		3,1,2 	//Bottom right triangle (V3, V1, V2)
+		//};
+		//
+		//float[] textureCoords = {
+		//	0,0,	//V0
+		//	0,1,	//V1
+		//	1,1,	//V2
+		//	1,0		//V3
+		//};
+		
+
+		/* Stall */
+		//RawModel model = OBJLoader.loadObjModel("stall", loader);
+		//TexturedModel staticModel = new TexturedModel(model, 
+		//		new ModelTexture(loader.loadTexture("stallTexture")));
+		
+		/* Dragon */
+		//RawModel dragonRawModel = OBJLoader.loadObjModel("dragon", loader);
+		//TexturedModel dragonModel = new TexturedModel(dragonRawModel, 
+		//		new ModelTexture(loader.loadTexture("white")));
+		
+		
+		
+		
+		DisplayManager.createDisplay();	
+		Loader loader = new Loader();
+		
+		/* Tree */
+		TexturedModel treeModel = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
+		
+		/* Grass */
+		TexturedModel grassModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
+		grassModel.getTexture().setHasTransparency(true);
+		grassModel.getTexture().setUseFakeLighting(true);
+		
+		/* Fern */
+		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
+		fernModel.getTexture().setHasTransparency(true);
+		
+	
+		
+		
+		/* Light */
+		Light light = new Light(new Vector3f(300000,200000,300000), new Vector3f(1,1,1)); // light source // light color
+		
+		/* Terrain */
+		Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain3 = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
+		
+		
+		/* Camera */
+		Camera camera = new Camera();
+		
+		
+		
+
+
+		Random random = new Random();
+		
+		
+		/* Add all trees to list */
+		List<Entity> allTrees = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0; //random.nextFloat() * 100 - 50;
+			float z = random.nextFloat() * -300;
+			allTrees.add(new Entity(treeModel, new Vector3f(x,y,z), 0 /* random.nextFloat() * 180f */, 0  /* random.nextFloat() * 180f */, 0f, 1f));
+		}	
+		for (Entity tree : allTrees) {
+			ModelTexture texture = tree.getModel().getTexture();
+			texture.setShineDamper(10);
+			texture.setReflectivity(1);
+		}
+		
+		
+		
+		/* Add all grass to list */
+		List<Entity> allGrass = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0; //random.nextFloat() * 100 - 50;
+			float z = random.nextFloat() * -300;
+			allGrass.add(new Entity(grassModel, new Vector3f(x,y,z), 0, 0, 0f, 0.5f));
+		}
+		for (Entity grass : allGrass) {
+			ModelTexture texture = grass.getModel().getTexture();
+			texture.setShineDamper(10);
+			texture.setReflectivity(1);
+		}
+		
+		
+		/* Add all fern to list */
+		List<Entity> allFerns = new ArrayList<Entity>();
+		for (int i = 0; i < 100; ++i) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = 0; //random.nextFloat() * 100 - 50;
+			float z = random.nextFloat() * -300;
+			allFerns.add(new Entity(fernModel, new Vector3f(x,y,z), 0, 0, 0f, 0.25f));
+		}
+		
+		
+		
+		MasterRenderer renderer = new MasterRenderer();
+		
+		while(!Display.isCloseRequested()) {
+			camera.move();
+			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			renderer.processTerrain(terrain3);
+			
+			for (Entity tree : allTrees) {
+				tree.increaseRotation(0, 1, 0);
+				renderer.processEntity(tree);
+			}
+
+			for (Entity grass : allGrass) {
+				renderer.processEntity(grass);
+			}
+			
+			for (Entity fern : allFerns) {
+				renderer.processEntity(fern);
+			}
+
+			
+
+			
+			renderer.render(light, camera);
+			DisplayManager.updateDisplay();
+		}
+		
+		renderer.cleanUp();
+		loader.cleanUp();
+		DisplayManager.closeDisplay();
+	}
+
+}

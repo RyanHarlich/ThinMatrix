@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="shaders.StaticShader"/>
+<fullyQualifiedTypeName name="models.TexturedModel"/>
+<fullyQualifiedTypeName name="entities.Entity"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="renderEngine.MasterRenderer"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="entities.Light"/>
+<fullyQualifiedTypeName name="entities.Camera"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="models.RawModel"/>
+<fullyQualifiedTypeName name="textures.ModelTexture"/>
+<fullyQualifiedTypeName name="renderEngine.Loader"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Matrix4f"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="shaders.TerrainShader"/>
+<fullyQualifiedTypeName name="terrains.Terrain"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
+<fullyQualifiedTypeName name="textures.TerrainTexture"/>
+<fullyQualifiedTypeName name="textures.TerrainTexturePack"/>
+<fullyQualifiedTypeName name="org.lwjgl.Sys"/>
+<fullyQualifiedTypeName name="org.lwjgl.input.Keyboard"/>
+<fullyQualifiedTypeName name="renderEngine.DisplayManager"/>
+<fullyQualifiedTypeName name="entities.Player"/>
+</qualifiedTypeNameHistroy>
