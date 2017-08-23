@@ -24,4 +24,5 @@
 <fullyQualifiedTypeName name="org.lwjgl.input.Keyboard"/>
 <fullyQualifiedTypeName name="renderEngine.DisplayManager"/>
 <fullyQualifiedTypeName name="entities.Player"/>
+<fullyQualifiedTypeName name="org.lwjgl.input.Mouse"/>
 </qualifiedTypeNameHistroy>

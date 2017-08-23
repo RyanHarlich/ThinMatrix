@@ -32,7 +32,6 @@ public class Player extends Entity {
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds(); // speed per second (the number of seconds that have passed)
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-		super.increasePosition(dx, 0, dz);
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds(); // gravity per second (the number of seconds that have passed)
 		
 		if (super.getPosition().y < TERRAIN_HEIGHT) {
@@ -41,7 +40,7 @@ public class Player extends Entity {
 			super.getPosition().y = TERRAIN_HEIGHT;
 		}
 		
-		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0); // upwards speed per second  (the number of seconds that have passed)
+		super.increasePosition(dx, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), dz); // upwards speed per second  (the number of seconds that have passed)
 		
 	}
 	
