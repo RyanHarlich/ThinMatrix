@@ -112,7 +112,7 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(20000,40000,20000), new Vector3f(1,1,1)); // light source // light color
 		
 		/* Terrain */
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"); 	// darker the spot the lower the spot
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		Terrain terrain2 = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
 		
 		

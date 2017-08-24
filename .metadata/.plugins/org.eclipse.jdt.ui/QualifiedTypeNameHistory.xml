@@ -17,7 +17,6 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="shaders.TerrainShader"/>
 <fullyQualifiedTypeName name="terrains.Terrain"/>
-<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
 <fullyQualifiedTypeName name="textures.TerrainTexture"/>
 <fullyQualifiedTypeName name="textures.TerrainTexturePack"/>
 <fullyQualifiedTypeName name="org.lwjgl.Sys"/>
@@ -25,4 +24,9 @@
 <fullyQualifiedTypeName name="renderEngine.DisplayManager"/>
 <fullyQualifiedTypeName name="entities.Player"/>
 <fullyQualifiedTypeName name="org.lwjgl.input.Mouse"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL14"/>
+<fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.awt.image.BufferedImage"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
 </qualifiedTypeNameHistroy>
