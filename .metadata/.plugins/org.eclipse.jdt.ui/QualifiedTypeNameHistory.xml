@@ -16,7 +16,6 @@
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Matrix4f"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="shaders.TerrainShader"/>
-<fullyQualifiedTypeName name="terrains.Terrain"/>
 <fullyQualifiedTypeName name="textures.TerrainTexture"/>
 <fullyQualifiedTypeName name="textures.TerrainTexturePack"/>
 <fullyQualifiedTypeName name="org.lwjgl.Sys"/>
@@ -29,4 +28,7 @@
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.awt.image.BufferedImage"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
+<fullyQualifiedTypeName name="toolbox.Maths"/>
+<fullyQualifiedTypeName name="terrains.Terrain"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector2f"/>
 </qualifiedTypeNameHistroy>

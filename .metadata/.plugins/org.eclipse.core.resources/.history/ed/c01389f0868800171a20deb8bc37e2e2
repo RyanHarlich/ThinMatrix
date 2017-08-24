@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
@@ -89,7 +88,6 @@ public class Terrain {
 							heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,
 							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
 		}
-		return answer;
 	}
 
 	private RawModel generateTerrain(Loader loader, String heightMap){
