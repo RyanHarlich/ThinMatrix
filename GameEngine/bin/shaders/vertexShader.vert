@@ -18,25 +18,37 @@ uniform vec3 lightPosition;
 
 uniform float useFakeLighting;
 
+uniform float numberOfRows;
+uniform vec2 offset;
+
 const float density = 0.007f; //= 0.0035f; out in the distance fog // the amount of fog
 const float gradient = 1.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
 
 void main(void) {
 
+	/* Camera view */
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_textureCoords = textureCoords;
+	
+	
+	/* Texture */
+	pass_textureCoords = (textureCoords/numberOfRows) + offset;
 
+	/* Normal */
 	vec3 actualNormal = normal;
+	
+	/* Grass Lighting */
 	if (useFakeLighting > 0.5) {
 		actualNormal = vec3(0.0f, 1.0f, 0.0f); // points directly up, for grass lighting
 	}
 	
+	/* Light */
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0f)).xyz;
 	toLightVector = lightPosition - worldPosition.xyz;
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0f, 0.0f, 0.0f, 1.0f)).xyz - worldPosition.xyz;
 
+	/* Fog */
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density), gradient)); // fog forumla
 	visibility = clamp(visibility, 0.0f, 1.0f);

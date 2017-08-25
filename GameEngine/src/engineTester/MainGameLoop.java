@@ -53,8 +53,8 @@ public class MainGameLoop {
 		/* Player */
 		TexturedModel playerModel = new TexturedModel(OBJLoader.loadObjModel("person", loader), new ModelTexture(loader.loadTexture("playerTexture")));
 		ModelTexture playerTexture = playerModel.getTexture();
-		playerTexture.setShineDamper(10);
-		playerTexture.setReflectivity(1);
+		playerTexture.setShineDamper(100);
+		playerTexture.setReflectivity(10);
 		
 		/* Tree */
 		TexturedModel treeModel = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
@@ -63,18 +63,22 @@ public class MainGameLoop {
 		TexturedModel lowPolyTreeModel = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree", loader), new ModelTexture(loader.loadTexture("lowPolyTree")));
 		
 		/* Grass */
-		TexturedModel grassModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
-		grassModel.getTexture().setHasTransparency(true);
-		grassModel.getTexture().setUseFakeLighting(true);
+		//TexturedModel grassModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
+		//grassModel.getTexture().setHasTransparency(true);
+		//grassModel.getTexture().setUseFakeLighting(true);
 		
 		/* Flower */
-		TexturedModel flowerModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("flowerTexture")));
-		flowerModel.getTexture().setHasTransparency(true);
-		flowerModel.getTexture().setUseFakeLighting(true);
+		//TexturedModel flowerModel = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), new ModelTexture(loader.loadTexture("flowerTexture")));
+		//flowerModel.getTexture().setHasTransparency(true);
+		//flowerModel.getTexture().setUseFakeLighting(true);
 		
 		/* Fern */
-		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
+		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fernTextureAtlases"));
+		fernTextureAtlas.setNumberOfRows(2);
+		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), fernTextureAtlas);
 		fernModel.getTexture().setHasTransparency(true);
+		
+
 		
 		/* Box */
 		TexturedModel boxModel = new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")));
@@ -94,11 +98,11 @@ public class MainGameLoop {
 		Random random = new Random();
 		List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 400; ++i) {
-			if (i % 20 == 0) {
+			if (i % 2 == 0) {
 				float x = random.nextFloat() * 800 - 400;
 				float z = random.nextFloat() * -600;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(fernModel, new Vector3f(x, y, z), 0, 
+				entities.add(new Entity(fernModel, random.nextInt(4), new Vector3f(x, y, z), 0, 
 						random.nextFloat() * 360, 0, 0.9f));
 
 			}
@@ -111,16 +115,6 @@ public class MainGameLoop {
 				z = random.nextFloat() * -600;
 				y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(treeModel, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
-			}
-			if (i % 2 == 0) {
-				float x = random.nextFloat() * 800 - 400;
-				float z = random.nextFloat() * -600;
-				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(grassModel, new Vector3f(x, y, z), 0, 0, 0, 1.8f));
-				x = random.nextFloat() * 800 - 400;
-				z = random.nextFloat() * -600;
-				y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(flowerModel, new Vector3f(x, y, z), 0, 0, 0, 2.3f));
 			}
 		}
 		
@@ -142,16 +136,6 @@ public class MainGameLoop {
 		
 		
 		
-
-		
-		
-		
-		
-		
-
-		
-		
-		
 		MasterRenderer renderer = new MasterRenderer();
 		
 		
@@ -160,6 +144,9 @@ public class MainGameLoop {
 		
 		/* Camera */
 		Camera camera = new Camera(player);
+		
+		
+		
 		
 		
 		while(!Display.isCloseRequested()) {
