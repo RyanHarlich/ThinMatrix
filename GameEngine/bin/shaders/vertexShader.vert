@@ -7,14 +7,14 @@ in vec3 normal;
 //out vec3 color;
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector;
+out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
 
 uniform mat4 transformationMatrix; 	//rotation and translation and matrix
 uniform mat4 projectionMatrix;		//the frustum
 uniform mat4 viewMatrix;			// position in respect to the world
-uniform vec3 lightPosition;
+uniform vec3 lightPosition[4];
 
 uniform float useFakeLighting;
 
@@ -33,7 +33,7 @@ void main(void) {
 	
 	
 	/* Texture */
-	pass_textureCoords = (textureCoords/numberOfRows) + offset;
+	pass_textureCoords = (textureCoords/numberOfRows) + offset; // offset is from texture atlases tutorial 23
 
 	/* Normal */
 	vec3 actualNormal = normal;
@@ -45,7 +45,9 @@ void main(void) {
 	
 	/* Light */
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0f)).xyz;
-	toLightVector = lightPosition - worldPosition.xyz;
+	for(int i = 0; i < 4; ++i) {
+		toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+	}
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0f, 0.0f, 0.0f, 1.0f)).xyz - worldPosition.xyz;
 
 	/* Fog */

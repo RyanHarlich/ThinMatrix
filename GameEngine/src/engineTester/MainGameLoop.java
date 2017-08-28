@@ -135,9 +135,11 @@ public class MainGameLoop {
 		
 		
 		/* Light */
-		Light light = new Light(new Vector3f(20000,40000,20000), new Vector3f(1,1,1)); // light source // light color
-		
-		
+		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(2, 2, 2)); // light source // light color
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(sun);
+		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
@@ -175,7 +177,7 @@ public class MainGameLoop {
 			
 
 			
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
