@@ -10,11 +10,7 @@
 <fullyQualifiedTypeName name="entities.Light"/>
 <fullyQualifiedTypeName name="entities.Camera"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="models.RawModel"/>
 <fullyQualifiedTypeName name="textures.ModelTexture"/>
-<fullyQualifiedTypeName name="renderEngine.Loader"/>
-<fullyQualifiedTypeName name="org.lwjgl.util.vector.Matrix4f"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="shaders.TerrainShader"/>
 <fullyQualifiedTypeName name="textures.TerrainTexture"/>
 <fullyQualifiedTypeName name="textures.TerrainTexturePack"/>
@@ -28,7 +24,19 @@
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.awt.image.BufferedImage"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
-<fullyQualifiedTypeName name="toolbox.Maths"/>
 <fullyQualifiedTypeName name="terrains.Terrain"/>
+<fullyQualifiedTypeName name="renderEngine.Loader"/>
+<fullyQualifiedTypeName name="models.RawModel"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL30"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL20"/>
+<fullyQualifiedTypeName name="guis.GuiTexture"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector2f"/>
+<fullyQualifiedTypeName name="guis.GuiRenderer"/>
+<fullyQualifiedTypeName name="shaders.ShaderProgram"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL12"/>
+<fullyQualifiedTypeName name="toolbox.Maths"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Matrix4f"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL11"/>
 </qualifiedTypeNameHistroy>

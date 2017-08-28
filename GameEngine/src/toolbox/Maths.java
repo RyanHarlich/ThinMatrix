@@ -7,6 +7,14 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 
 public class Maths {
+	
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1.0f), matrix, matrix);
+		return matrix;
+	}
 
 	// Barycentric coordinates on triangles
 	public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
