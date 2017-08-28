@@ -11,6 +11,7 @@ out vec4 out_Color;
 
 uniform sampler2D textureSampler;
 uniform vec3 lightColor[4];
+uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
@@ -28,13 +29,17 @@ void main(void) {
 	vec3 totalSpecular = vec3(0.0f);
 
 	for (int i = 0; i < 4; ++i) {
+		/* Attenuated light brightness (fading light) */
+		float distance = length(toLightVector[i]);
+		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
+	
 		/* Normalize vectors cont. */
 		vec3 unitLightVector = normalize(toLightVector[i]);
 	
 		/* Diffuse lighting (shadowing) */ 
 		float nDotl = dot(unitNormal, unitLightVector); // 1 if parallel, 0 if perpindicular
 		float brightness = max(nDotl, 0.0); // sometimes dot product returns less than 0 // 0.2 for ambient lighting so no spots are all black // moved down below since this would add up multiple times, in totalDiffuse
-		totalDiffuse = totalDiffuse + brightness * lightColor[i];
+		totalDiffuse = totalDiffuse + (brightness * lightColor[i]) / attFactor;
 	
 		/* Reflection */
 		vec3 lightDirection = -unitLightVector;
@@ -44,7 +49,7 @@ void main(void) {
 		float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
 		specularFactor = max(specularFactor, 0.0f);
 		float dampedFactor = pow(specularFactor, shineDamper); // makes lower specular light lower, but higher does not change much
-		totalSpecular = totalSpecular +  dampedFactor * reflectivity * lightColor[i];
+		totalSpecular = totalSpecular +  (dampedFactor * reflectivity * lightColor[i]) / attFactor;
 	}
 	
 	/* Ambient lighting */
