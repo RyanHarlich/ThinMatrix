@@ -34,9 +34,7 @@
 <fullyQualifiedTypeName name="toolbox.Maths"/>
 <fullyQualifiedTypeName name="models.RawModel"/>
 <fullyQualifiedTypeName name="renderEngine.Loader"/>
-<fullyQualifiedTypeName name="org.lwjgl.opengl.GL30"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL20"/>
-<fullyQualifiedTypeName name="org.lwjgl.opengl.GL11"/>
 <fullyQualifiedTypeName name="skybox.SkyboxRenderer"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL12"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
@@ -47,11 +45,13 @@
 <fullyQualifiedTypeName name="org.lwjgl.input.Mouse"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.Display"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector2f"/>
-<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
 <fullyQualifiedTypeName name="toolbox.MousePicker"/>
 <fullyQualifiedTypeName name="terrains.Terrain"/>
 <fullyQualifiedTypeName name="water.WaterShader"/>
 <fullyQualifiedTypeName name="water.WaterRenderer"/>
 <fullyQualifiedTypeName name="water.WaterTile"/>
 <fullyQualifiedTypeName name="water.WaterFrameBuffers"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL11"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL30"/>
+<fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
 </qualifiedTypeNameHistroy>

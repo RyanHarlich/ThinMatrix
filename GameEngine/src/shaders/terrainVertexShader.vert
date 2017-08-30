@@ -19,12 +19,17 @@ uniform vec3 lightPosition[4];
 const float density = 0.007f; //= 0.0035f; out in the distance fog // the amount of fog
 const float gradient = 1.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
 
+uniform vec4 plane;
+
 void main(void) {
 
 	/* Camera view */
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
+	
+	/* Clipping Planes */
+	gl_ClipDistance[0] = dot(worldPosition, plane);
 	
 	/* Texture */
 	pass_textureCoords = textureCoords;
