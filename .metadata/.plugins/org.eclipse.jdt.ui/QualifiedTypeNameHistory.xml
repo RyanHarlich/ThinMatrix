@@ -37,7 +37,6 @@
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL20"/>
 <fullyQualifiedTypeName name="skybox.SkyboxRenderer"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL12"/>
-<fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
 <fullyQualifiedTypeName name="renderEngine.DisplayManager"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector3f"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Matrix4f"/>
@@ -54,4 +53,5 @@
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL11"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL30"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
+<fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
 </qualifiedTypeNameHistroy>

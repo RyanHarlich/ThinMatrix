@@ -188,20 +188,22 @@ public class MainGameLoop {
 		
 		//************************* Water Renderer Set-up **********************
 		
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		
 		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		WaterTile water = new WaterTile(75, -75, 0);
 		waters.add(water);
 		
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
+
 		/* Small mini view window */
 		//GuiTexture miniView = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
 		//guiTextures.add(miniView);
-		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guiTextures.add(refraction);
-		guiTextures.add(reflection);
+		//GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//guiTextures.add(refraction);
+		//guiTextures.add(reflection);
 		
 		//************************* MAIN GAME LOOP *****************************
 		

@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -24,6 +27,10 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;
+import water.WaterFrameBuffers;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 public class MainGameLoop {
 
@@ -91,8 +98,10 @@ public class MainGameLoop {
 		
 		
 		
-		/* Terrain */
+		/* Terrains */
+		List<Terrain> terrains = new ArrayList<Terrain>();
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"); 	// darker the spot the lower the spot
+		terrains.add(terrain);
 		//Terrain terrain2 = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
 		
 		
@@ -129,7 +138,8 @@ public class MainGameLoop {
 		
 		
 		/* Lamp lights */
-		entities.add(new Entity(lampModel, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		Entity lampEntity = new Entity(lampModel, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
+		entities.add(lampEntity);
 		entities.add(new Entity(lampModel, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		entities.add(new Entity(lampModel, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
 		
@@ -137,11 +147,11 @@ public class MainGameLoop {
 		
 		/* Light */	
 		List<Light> lights = new ArrayList<Light>();
-		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(2, 2, 2)); // light source // light color
+		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)); // light source // light color
 		lights.add(sun);
-		//lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)));
-		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); // light source // light color // attenuation
-		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
+		Light light = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
+		lights.add(light); // light source // light color // attenuation
+		lights.add(new Light(new Vector3f(370, 15, -295), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
 		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
 		
 
@@ -151,6 +161,7 @@ public class MainGameLoop {
 		
 		/* Player */
 		Player player = new Player(playerModel, new Vector3f(100, 0, -50), 0, 180, 0, 0.6f);
+		entities.add(player);
 		
 		/* Camera */
 		Camera camera = new Camera(player);
@@ -158,9 +169,9 @@ public class MainGameLoop {
 		
 		
 		/* GUI */
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guis.add(gui);
+		guiTextures.add(gui);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		
@@ -172,36 +183,83 @@ public class MainGameLoop {
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
 		
+		
+
+		
+		//************************* Water Renderer Set-up **********************
+		
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		WaterTile water = new WaterTile(75, -75, 0);
+		waters.add(water);
+		
+
+		/* Small mini view window */
+		//GuiTexture miniView = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
+		//guiTextures.add(miniView);
+		//GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//guiTextures.add(refraction);
+		//guiTextures.add(reflection);
+		
 		//************************* MAIN GAME LOOP *****************************
 		
 		while(!Display.isCloseRequested()) {
 			player.move(terrain);
-			camera.move();
-			
-			picker.update(); // update after camera has moved
-			System.out.println(picker.getCurrentRay());
-			
-			renderer.processEntity(player);
-			
-			renderer.processTerrain(terrain);
-			//renderer.processTerrain(terrain2);
-			
-			for (Entity entity : entities) {
-				renderer.processEntity(entity);
-			}
+			camera.move();			
+			mousePickerTutorial(picker, lampEntity, light);// update after camera has moved
 
+			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 			
-			renderer.render(lights, camera);
-			guiRenderer.render(guis);
+			// Frame Buffer Object on a GUI
+			//fbos.bindReflectionFrameBuffer();
+			//renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, 15));
+			//fbos.unbindCurrentFrameBuffer();
+			
+			// render reflection texture
+			fbos.bindReflectionFrameBuffer();
+			float distance = 2 * (camera.getPosition().y - water.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight())); // render everything above the water
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+			
+			// render refraction texture
+			fbos.bindRefractionFrameBuffer();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight())); // render everything under the water
+			
+			// render to screen
+			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+			fbos.unbindCurrentFrameBuffer();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 0, 0, 0));
+			waterRenderer.render(waters, camera);
+			guiRenderer.render(guiTextures);
 			DisplayManager.updateDisplay();
 		}
 		
 		//************************************************************************
 		
+		fbos.cleanUp();
+		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+	
+	public static void mousePickerTutorial(MousePicker picker, Entity lampEntity, Light light) {
+		// Mouse picker
+		picker.update(); // update after camera has moved
+		System.out.println(picker.getCurrentRay());
+		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+		if (terrainPoint != null) {
+			lampEntity.setPosition(terrainPoint);
+			light.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+13,terrainPoint.z+5));
+		}
 	}
 
 }
