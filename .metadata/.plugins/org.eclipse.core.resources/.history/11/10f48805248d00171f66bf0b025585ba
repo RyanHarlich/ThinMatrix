@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -20,6 +23,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 public class MainGameLoop {
 
@@ -53,8 +57,8 @@ public class MainGameLoop {
 		/* Player */
 		TexturedModel playerModel = new TexturedModel(OBJLoader.loadObjModel("person", loader), new ModelTexture(loader.loadTexture("playerTexture")));
 		ModelTexture playerTexture = playerModel.getTexture();
-		playerTexture.setShineDamper(10);
-		playerTexture.setReflectivity(1);
+		playerTexture.setShineDamper(100);
+		playerTexture.setReflectivity(10);
 		
 		/* Tree */
 		TexturedModel treeModel = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
@@ -78,17 +82,19 @@ public class MainGameLoop {
 		TexturedModel fernModel = new TexturedModel(OBJLoader.loadObjModel("fern", loader), fernTextureAtlas);
 		fernModel.getTexture().setHasTransparency(true);
 		
-
-		
 		/* Box */
 		TexturedModel boxModel = new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")));
 
+		/* Lamp */
+		TexturedModel lampModel = new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp")));
+
 		
 		
 		
-		
-		/* Terrain */
+		/* Terrains */
+		List<Terrain> terrains = new ArrayList<Terrain>();
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"); 	// darker the spot the lower the spot
+		terrains.add(terrain);
 		//Terrain terrain2 = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
 		
 		
@@ -117,60 +123,95 @@ public class MainGameLoop {
 				entities.add(new Entity(treeModel, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
 			}
 		}
-		
+		/* Boxes */
 		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
 				-10), 0, 0, 0, 5f));
-		
 		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
 				-100), 0, 0, 0, 5f));
 		
 		
+		/* Lamp lights */
+		Entity lampEntity = new Entity(lampModel, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
+		entities.add(lampEntity);
+		entities.add(new Entity(lampModel, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new Entity(lampModel, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
 		
 		
 		
+		/* Light */	
+		List<Light> lights = new ArrayList<Light>();
+		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)); // light source // light color
+		lights.add(sun);
+		Light light = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
+		lights.add(light); // light source // light color // attenuation
+		lights.add(new Light(new Vector3f(370, 15, -295), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
 		
+
 		
-		
-		/* Light */
-		Light light = new Light(new Vector3f(20000,40000,20000), new Vector3f(1,1,1)); // light source // light color
-		
-		
-		
-		MasterRenderer renderer = new MasterRenderer();
+
 		
 		
 		/* Player */
 		Player player = new Player(playerModel, new Vector3f(100, 0, -50), 0, 180, 0, 0.6f);
+		entities.add(player);
 		
 		/* Camera */
 		Camera camera = new Camera(player);
 		
 		
 		
+		/* GUI */
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		guis.add(gui);
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
+		
+		/* Master Renderer */
+		MasterRenderer renderer = new MasterRenderer(loader);
+		
+		
+		/* Mouse Picker */
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+		
+		
+		
+		//************************* Water Renderer Set-up **********************
+		
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		waters.add(new WaterTile(75, -75, 0));
+		
+		
+		
+		//************************* MAIN GAME LOOP *****************************
 		
 		while(!Display.isCloseRequested()) {
+			player.move(terrain);
 			camera.move();
 			
-			player.move(terrain);
 			
-			renderer.processEntity(player);
-			
-			renderer.processTerrain(terrain);
-			//renderer.processTerrain(terrain2);
-			
-			for (Entity entity : entities) {
-
-				renderer.processEntity(entity);
+			// Mouse picker
+			picker.update(); // update after camera has moved
+			System.out.println(picker.getCurrentRay());
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null) {
+				lampEntity.setPosition(terrainPoint);
+				light.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+13,terrainPoint.z+5));
 			}
-
 			
-
 			
-			renderer.render(light, camera);
+			
+			renderer.renderScene(entities, terrains, lights, camera);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		
+		//************************************************************************
+		
+		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();

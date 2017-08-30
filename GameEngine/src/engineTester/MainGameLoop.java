@@ -24,6 +24,9 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 public class MainGameLoop {
 
@@ -91,8 +94,10 @@ public class MainGameLoop {
 		
 		
 		
-		/* Terrain */
+		/* Terrains */
+		List<Terrain> terrains = new ArrayList<Terrain>();
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"); 	// darker the spot the lower the spot
+		terrains.add(terrain);
 		//Terrain terrain2 = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
 		
 		
@@ -152,6 +157,7 @@ public class MainGameLoop {
 		
 		/* Player */
 		Player player = new Player(playerModel, new Vector3f(100, 0, -50), 0, 180, 0, 0.6f);
+		entities.add(player);
 		
 		/* Camera */
 		Camera camera = new Camera(player);
@@ -173,42 +179,51 @@ public class MainGameLoop {
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
 		
+		
+		//************************* Water Renderer Set-up **********************
+		
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		waters.add(new WaterTile(75, -75, 0));
+		
+		
+		
 		//************************* MAIN GAME LOOP *****************************
 		
 		while(!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
 			
-			picker.update(); // update after camera has moved
-			System.out.println(picker.getCurrentRay());
-			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			if (terrainPoint != null) {
-				lampEntity.setPosition(terrainPoint);
-				light.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+13,terrainPoint.z+5));
-			}
-			
-			
-			
-			renderer.processEntity(player);		
-			renderer.processTerrain(terrain);
-			//renderer.processTerrain(terrain2);
-			
-			for (Entity entity : entities) {
-				renderer.processEntity(entity);
-			}
+			mousePickerTutorial(picker, lampEntity, light);// update after camera has moved
 
 			
-			renderer.render(lights, camera);
+			
+			
+			renderer.renderScene(entities, terrains, lights, camera);
+			waterRenderer.render(waters, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		
 		//************************************************************************
 		
+		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+	
+	public static void mousePickerTutorial(MousePicker picker, Entity lampEntity, Light light) {
+		// Mouse picker
+		picker.update(); // update after camera has moved
+		System.out.println(picker.getCurrentRay());
+		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+		if (terrainPoint != null) {
+			lampEntity.setPosition(terrainPoint);
+			light.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+13,terrainPoint.z+5));
+		}
 	}
 
 }

@@ -50,4 +50,7 @@
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
 <fullyQualifiedTypeName name="toolbox.MousePicker"/>
 <fullyQualifiedTypeName name="terrains.Terrain"/>
+<fullyQualifiedTypeName name="water.WaterShader"/>
+<fullyQualifiedTypeName name="water.WaterRenderer"/>
+<fullyQualifiedTypeName name="water.WaterTile"/>
 </qualifiedTypeNameHistroy>
