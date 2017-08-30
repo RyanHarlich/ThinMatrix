@@ -53,4 +53,5 @@
 <fullyQualifiedTypeName name="water.WaterShader"/>
 <fullyQualifiedTypeName name="water.WaterRenderer"/>
 <fullyQualifiedTypeName name="water.WaterTile"/>
+<fullyQualifiedTypeName name="water.WaterFrameBuffers"/>
 </qualifiedTypeNameHistroy>

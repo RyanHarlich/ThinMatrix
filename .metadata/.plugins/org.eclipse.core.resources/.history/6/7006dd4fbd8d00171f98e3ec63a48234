@@ -189,7 +189,7 @@ public class MainGameLoop {
 		waters.add(new WaterTile(75, -75, 0));
 		
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
+		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.25f, 0.5f), new Vector2f(0.25f, 0.25f));
 		guiTextures.add(reflectionGui);
 		
 		//************************* MAIN GAME LOOP *****************************

@@ -166,9 +166,9 @@ public class MainGameLoop {
 		
 		
 		/* GUI */
-		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guiTextures.add(gui);
+		guis.add(gui);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		
@@ -189,8 +189,7 @@ public class MainGameLoop {
 		waters.add(new WaterTile(75, -75, 0));
 		
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
-		guiTextures.add(reflectionGui);
+		GuiTexture gui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 		
 		//************************* MAIN GAME LOOP *****************************
 		
@@ -205,7 +204,7 @@ public class MainGameLoop {
 			
 			renderer.renderScene(entities, terrains, lights, camera);
 			waterRenderer.render(waters, camera);
-			guiRenderer.render(guiTextures);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		

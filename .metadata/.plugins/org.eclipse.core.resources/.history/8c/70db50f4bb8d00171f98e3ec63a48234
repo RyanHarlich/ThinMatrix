@@ -24,7 +24,6 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;
-import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
@@ -166,9 +165,9 @@ public class MainGameLoop {
 		
 		
 		/* GUI */
-		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guiTextures.add(gui);
+		guis.add(gui);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		
@@ -188,30 +187,27 @@ public class MainGameLoop {
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		waters.add(new WaterTile(75, -75, 0));
 		
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
-		guiTextures.add(reflectionGui);
+		
 		
 		//************************* MAIN GAME LOOP *****************************
 		
 		while(!Display.isCloseRequested()) {
 			player.move(terrain);
-			camera.move();			
+			camera.move();
+			
 			mousePickerTutorial(picker, lampEntity, light);// update after camera has moved
 
-			fbos.bindReflectionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera);
-			fbos.unbindCurrentFrameBuffer();
+			
+			
 			
 			renderer.renderScene(entities, terrains, lights, camera);
 			waterRenderer.render(waters, camera);
-			guiRenderer.render(guiTextures);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		
 		//************************************************************************
 		
-		fbos.cleanUp();
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
