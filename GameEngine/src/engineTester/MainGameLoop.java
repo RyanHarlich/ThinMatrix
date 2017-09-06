@@ -148,9 +148,9 @@ public class MainGameLoop {
 		/* Light */	
 		List<Light> lights = new ArrayList<Light>();
 		// night
-		//Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)); // light source // light color
+		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)); // light source // light color
 		// day
-		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1.6f, 1.6f, 1.6f));
+		//Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1.6f, 1.6f, 1.6f));
 		lights.add(sun);
 		Light light = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(light); // light source // light color // attenuation
@@ -227,13 +227,13 @@ public class MainGameLoop {
 			float distance = 2 * (camera.getPosition().y - water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight())); // render everything above the water
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1.0f)); // render everything above the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
 			// render refraction texture
 			fbos.bindRefractionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight())); // render everything under the water
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1.0f)); // render everything under the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial 
 			
 			// render to screen
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
