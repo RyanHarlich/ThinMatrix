@@ -7,7 +7,6 @@
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="renderEngine.MasterRenderer"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
-<fullyQualifiedTypeName name="entities.Light"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="textures.ModelTexture"/>
 <fullyQualifiedTypeName name="shaders.TerrainShader"/>
@@ -54,4 +53,5 @@
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL30"/>
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
+<fullyQualifiedTypeName name="entities.Light"/>
 </qualifiedTypeNameHistroy>

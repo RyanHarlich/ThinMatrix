@@ -3,16 +3,21 @@
 in vec4 clipSpace;
 in vec2 textureCoords;
 in vec3 toCameraVector;
+in vec3 fromLightVector;
 
 out vec4 out_Color;
 
 uniform sampler2D reflectionTexture; // above water
 uniform sampler2D refractionTexture; // under water
 uniform sampler2D dudvMap;
+uniform sampler2D normalMap;
+uniform vec3 lightColor;
 
 uniform float moveFactor;
 
 const float waveStrength = 0.02f;
+const float shineDamper = 20.0f;
+const float reflectivity = 0.6f;
 
 void main(void) {
 
@@ -22,9 +27,9 @@ void main(void) {
 	vec2 reflectTexCoords = vec2(ndc.x, -ndc.y);
 	
 	/* DuDv maps */
-	vec2 distortion1 = (texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
-	vec2 distortion2 = (texture(dudvMap, vec2(-textureCoords.x + moveFactor, textureCoords.y + moveFactor)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
-	vec2 totalDistortion = distortion1 + distortion2;	
+	vec2 distortedTexCoords = texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg*0.1;
+	distortedTexCoords = textureCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor);
+	vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength;
 	refractTexCoords += totalDistortion;
 	refractTexCoords = clamp(refractTexCoords, 0.001f, 0.999f);
 	reflectTexCoords += totalDistortion;
@@ -40,8 +45,18 @@ void main(void) {
 	float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0)); // the distance between vectors camera and pointing straight up
 	refractiveFactor = pow(refractiveFactor, 0.5f); // the greater the power the more reflective it is
 	
+	
+	/* Normal Map */
+	vec4 normalMapColor = texture(normalMap, distortedTexCoords);
+	// x,y,z = r,b,g of the r,g,b
+	vec3 normal = vec3(normalMapColor.r * 2.0f - 1.0f, normalMapColor.b, normalMapColor.g * 2.0f - 1.0f);
+	normal = normalize(normal);
+	vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
+	float specular = max(dot(reflectedLight, viewVector), 0.0f);
+	specular = pow(specular, shineDamper);
+	vec3 specularHighlights = lightColor * specular * reflectivity;
 
 	out_Color = mix(reflectColor, refractColor, refractiveFactor); // mix gradient of fresnel effect
-	out_Color = mix(out_Color, vec4(0.0f, 0.3f, 0.5f, 1.0f), 0.2); // mix a tint of bluish green to the water
+	out_Color = mix(out_Color, vec4(0.0f, 0.3f, 0.5f, 1.0f), 0.2) + vec4(specularHighlights, 1.0f); // mix a tint of bluish green to the water plus the normal map
 
 }

@@ -133,8 +133,8 @@ public class Camera {
 		
 		if (pitch < 1)
 			pitch = 1;
-		else if (pitch > 100)
-			pitch = 100;
+		else if (pitch > 90)
+			pitch = 90;
 	}
 	
 	private void calculateAngleAroundPlayer() {

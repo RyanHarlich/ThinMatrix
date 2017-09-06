@@ -239,12 +239,12 @@ public class MainGameLoop {
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			fbos.unbindCurrentFrameBuffer();
 			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 0, 0, 0));
-			waterRenderer.render(waters, camera);
+			waterRenderer.render(waters, camera, sun);
 			guiRenderer.render(guiTextures);
 			DisplayManager.updateDisplay();
 		}
 		
-		//************************************************************************
+		//***************************** Clean Up *********************************
 		
 		fbos.cleanUp();
 		waterShader.cleanUp();
