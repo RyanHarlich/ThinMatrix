@@ -22,14 +22,14 @@ void main(void) {
 	vec2 reflectTexCoords = vec2(ndc.x, -ndc.y);
 	
 	/* DuDv maps */
-	vec2 distortion1 = (texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
-	vec2 distortion2 = (texture(dudvMap, vec2(-textureCoords.x + moveFactor, textureCoords.y + moveFactor)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
-	vec2 totalDistortion = distortion1 + distortion2;	
-	refractTexCoords += totalDistortion;
-	refractTexCoords = clamp(refractTexCoords, 0.001f, 0.999f);
-	reflectTexCoords += totalDistortion;
-	refractTexCoords.x = clamp(refractTexCoords.x, 0.001f, 0.999f);
-	refractTexCoords.y = clamp(refractTexCoords.y, -0.999f, -0.001f);
+	//vec2 distortion1 = (texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
+	//vec2 distortion2 = (texture(dudvMap, vec2(-textureCoords.x + moveFactor, textureCoords.y + moveFactor)).rg * 2.0 - 1.0) * waveStrength; // only care about the red green components
+	//vec2 totalDistortion = distortion1 + distortion2;	
+	//refractTexCoords += totalDistortion;
+	//refractTexCoords = clamp(refractTexCoords, 0.001f, 0.999f);
+	//reflectTexCoords += totalDistortion;
+	//refractTexCoords.x = clamp(refractTexCoords.x, 0.001f, 0.999f);
+	//refractTexCoords.y = clamp(refractTexCoords.y, -0.999f, -0.001f);
 	
 	/* Projective Texture Mapping & Clipping Clipping Planes */
 	vec4 reflectColor = texture(reflectionTexture, reflectTexCoords);
@@ -38,7 +38,6 @@ void main(void) {
 	/* Fresnel Effect */
 	vec3 viewVector = normalize(toCameraVector);
 	float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0)); // the distance between vectors camera and pointing straight up
-	refractiveFactor = pow(refractiveFactor, 0.5f); // the greater the power the more reflective it is
 	
 
 	out_Color = mix(reflectColor, refractColor, refractiveFactor); // mix gradient of fresnel effect

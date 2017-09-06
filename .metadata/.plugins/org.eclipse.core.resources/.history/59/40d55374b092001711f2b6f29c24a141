@@ -38,10 +38,9 @@ void main(void) {
 	/* Fresnel Effect */
 	vec3 viewVector = normalize(toCameraVector);
 	float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0)); // the distance between vectors camera and pointing straight up
-	refractiveFactor = pow(refractiveFactor, 0.5f); // the greater the power the more reflective it is
 	
 
-	out_Color = mix(reflectColor, refractColor, refractiveFactor); // mix gradient of fresnel effect
+	out_Color = mix(reflectColor, refractColor, 0.0f); // mix gradient of fresnel effect
 	out_Color = mix(out_Color, vec4(0.0f, 0.3f, 0.5f, 1.0f), 0.2); // mix a tint of bluish green to the water
 
 }
