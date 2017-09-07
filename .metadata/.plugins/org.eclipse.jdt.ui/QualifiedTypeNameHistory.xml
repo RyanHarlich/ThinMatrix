@@ -54,4 +54,6 @@
 <fullyQualifiedTypeName name="org.lwjgl.util.vector.Vector4f"/>
 <fullyQualifiedTypeName name="org.lwjgl.opengl.GL13"/>
 <fullyQualifiedTypeName name="entities.Light"/>
+<fullyQualifiedTypeName name="normalMappingRenderer.NormalMappingRenderer"/>
+<fullyQualifiedTypeName name="normalMappingObjConverter.NormalMappedObjLoader"/>
 </qualifiedTypeNameHistroy>

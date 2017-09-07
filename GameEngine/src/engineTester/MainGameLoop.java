@@ -18,6 +18,7 @@ import entities.Player;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 import models.TexturedModel;
+import normalMappingObjConverter.NormalMappedObjLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -83,6 +84,26 @@ public class MainGameLoop {
 		//flowerModel.getTexture().setHasTransparency(true);
 		//flowerModel.getTexture().setUseFakeLighting(true);
 		
+		/* BobbleTree */
+		
+		/* Bunny */
+		
+		/* Dragon */
+		
+		/* Stall */
+		
+		/* Toon Rocks */
+		
+		/* Barrel */
+		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel", loader), new ModelTexture(loader.loadTexture("barrel")));
+		barrelModel.getTexture().setShineDamper(10);
+		barrelModel.getTexture().setReflectivity(0.5f);
+		barrelModel.getTexture().setNormalMap(loader.loadTexture("barrelNormal"));
+		
+		/* Boulder */
+		
+		/* Crate */
+		
 		/* Fern */
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fernTextureAtlases"));
 		fernTextureAtlas.setNumberOfRows(2);
@@ -110,6 +131,7 @@ public class MainGameLoop {
 		/* Create entities */
 		Random random = new Random();
 		List<Entity> entities = new ArrayList<Entity>();
+		List<Entity> normalMapEntities = new ArrayList<Entity>();
 		for (int i = 0; i < 400; ++i) {
 			if (i % 2 == 0) {
 				float x = random.nextFloat() * 800 - 400;
@@ -135,6 +157,7 @@ public class MainGameLoop {
 				-10), 0, 0, 0, 5f));
 		entities.add(new Entity(boxModel, new Vector3f(100, 5, 
 				-100), 0, 0, 0, 5f));
+		normalMapEntities.add(new Entity(barrelModel, new Vector3f(75, 10, -75), 0, 0, 0, 1.0f));
 		
 		
 		/* Lamp lights */
@@ -227,18 +250,18 @@ public class MainGameLoop {
 			float distance = 2 * (camera.getPosition().y - water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1.0f)); // render everything above the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1.0f)); // render everything above the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
 			// render refraction texture
 			fbos.bindRefractionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1.0f)); // render everything under the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial 
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1.0f)); // render everything under the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial 
 			
 			// render to screen
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			fbos.unbindCurrentFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 0, 0, 0));
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, 0, 0, 0));
 			waterRenderer.render(waters, camera, sun);
 			guiRenderer.render(guiTextures);
 			DisplayManager.updateDisplay();

@@ -19,9 +19,9 @@ void main(void) {
 	vec4 finalColor = mix(texture1, texture2, blendFactor);
 	
 	/* Cel Shading */
-	float amount = (finalColor.r + finalColor.g + finalColor.b) / 3.0f;
-	amount = floor(amount * levels) / levels;
-	finalColor.rgb = amount * fogColor;
+	//float amount = (finalColor.r + finalColor.g + finalColor.b) / 3.0f;
+	//amount = floor(amount * levels) / levels;
+	//finalColor.rgb = amount * fogColor;
 	
 	
 	float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
