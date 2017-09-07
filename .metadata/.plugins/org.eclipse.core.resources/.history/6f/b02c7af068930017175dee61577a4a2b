@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -144,7 +147,10 @@ public class MainGameLoop {
 		
 		/* Light */	
 		List<Light> lights = new ArrayList<Light>();
+		// night
 		Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)); // light source // light color
+		// day
+		//Light sun = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1.6f, 1.6f, 1.6f));
 		lights.add(sun);
 		Light light = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(light); // light source // light color // attenuation
@@ -166,9 +172,9 @@ public class MainGameLoop {
 		
 		
 		/* GUI */
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guis.add(gui);
+		guiTextures.add(gui);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		
@@ -181,14 +187,26 @@ public class MainGameLoop {
 		
 		
 		
+
+		
 		//************************* Water Renderer Set-up **********************
 		
-		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
-		List<WaterTile> waters = new ArrayList<WaterTile>();
-		waters.add(new WaterTile(75, -75, 0));
-		
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		WaterTile water = new WaterTile(75, -75, 0);
+		waters.add(water);
+		
+
+		/* Small mini view window */
+		//GuiTexture miniView = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.65f, 0.65f), new Vector2f(0.30f, 0.30f));
+		//guiTextures.add(miniView);
+		//GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		//guiTextures.add(refraction);
+		//guiTextures.add(reflection);
 		
 		//************************* MAIN GAME LOOP *****************************
 		
@@ -197,17 +215,36 @@ public class MainGameLoop {
 			camera.move();			
 			mousePickerTutorial(picker, lampEntity, light);// update after camera has moved
 
-			fbos.bindReflectionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera);
-			fbos.unbindCurrentFrameBuffer();
+			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 			
-			renderer.renderScene(entities, terrains, lights, camera);
-			waterRenderer.render(waters, camera);
-			guiRenderer.render(guis);
+			// Frame Buffer Object on a GUI
+			//fbos.bindReflectionFrameBuffer();
+			//renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, 15));
+			//fbos.unbindCurrentFrameBuffer();
+			
+			// render reflection texture
+			fbos.bindReflectionFrameBuffer();
+			float distance = 2 * (camera.getPosition().y - water.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1.0f)); // render everything above the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+			
+			// render refraction texture
+			fbos.bindRefractionFrameBuffer();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1.0f)); // render everything under the water // the add + 1.0f to rid of lines on edges of water in soft edge tutorial 
+			
+			// render to screen
+			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+			fbos.unbindCurrentFrameBuffer();
+			renderer.renderScene(entities, terrains, lights, camera, new Vector4f(0, 0, 0, 0));
+			waterRenderer.render(waters, camera, sun);
+			guiRenderer.render(guiTextures);
 			DisplayManager.updateDisplay();
 		}
 		
-		//************************************************************************
+		//***************************** Clean Up *********************************
 		
 		fbos.cleanUp();
 		waterShader.cleanUp();

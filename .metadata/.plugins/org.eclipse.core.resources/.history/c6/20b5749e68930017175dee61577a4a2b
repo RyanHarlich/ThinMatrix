@@ -59,8 +59,8 @@ void main(void) {
 		float dampedFactor = pow(specularFactor, shineDamper); // makes lower specular light lower, but higher does not change much
 		
 		/* Cel Shading */
-		level = floor(dampedFactor * levels);
-		dampedFactor = level / levels;
+		float level = floor(brightness * levels);
+		brightness = level / levels;
 		
 		/* Specular light (shinning) continue */
 		totalSpecular = totalSpecular +  (dampedFactor * reflectivity * lightColor[i]) / attFactor;

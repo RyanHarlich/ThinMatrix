@@ -23,6 +23,10 @@ uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
 
+const float levels = 3.0f;
+
+
+
 // diffuse lighting is shadowing
 // specular lighting is shinning
 void main(void) { 
@@ -61,6 +65,12 @@ void main(void) {
 		/* Diffuse lighting (shadowing) */ 
 		float nDotl = dot(unitNormal, unitLightVector); // 1 if parallel, 0 if perpindicular
 		float brightness = max(nDotl, 0.0f); // sometimes dot product returns less than 0 // 0.2 for ambient lighting so no spots are all black // moved down below since this would add up multiple times, in totalDiffuse
+		
+		/* Cel Shading */
+		float level = floor(brightness * levels);
+		brightness = level / levels;
+		
+		/* Diffuse lighting (shadowing) continue */ 
 		totalDiffuse = totalDiffuse + (brightness * lightColor[i]) / attFactor;
 	
 		/* Reflection */
@@ -71,6 +81,12 @@ void main(void) {
 		float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
 		specularFactor = max(specularFactor, 0.0f);
 		float dampedFactor = pow(specularFactor, shineDamper); // makes lower specular light lower, but higher does not change much
+		
+		/* Cel Shading */
+		level = floor(dampedFactor * levels);
+		dampedFactor = level / levels;
+		
+		/* Specular light (shinning) continue */
 		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColor[i]) / attFactor;
 	}
 	
