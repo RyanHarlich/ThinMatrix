@@ -6,6 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="deps/lib/jars/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="deps/lib/jars/lwjgl.jar"/>
 	<classpathentry kind="lib" path="deps/lib/jars/slick-util.jar"/>

@@ -56,4 +56,6 @@
 <fullyQualifiedTypeName name="entities.Light"/>
 <fullyQualifiedTypeName name="normalMappingRenderer.NormalMappingRenderer"/>
 <fullyQualifiedTypeName name="normalMappingObjConverter.NormalMappedObjLoader"/>
+<fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
 </qualifiedTypeNameHistroy>

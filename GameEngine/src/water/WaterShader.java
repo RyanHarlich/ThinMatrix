@@ -8,8 +8,8 @@ import entities.Light;
 
 public class WaterShader extends ShaderProgram {
 
-	private final static String VERTEX_FILE = "src/water/waterVertex.vert";
-	private final static String FRAGMENT_FILE = "src/water/waterFragment.frag";
+	private final static String VERTEX_FILE = "/water/waterVertex.vert";
+	private final static String FRAGMENT_FILE = "/water/waterFragment.frag";
 
 	private int location_modelMatrix;
 	private int location_viewMatrix;
